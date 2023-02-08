@@ -196,7 +196,23 @@ class Scanner {
     void processdata(string input){
         unsigned long l = input.length();
         for (int i = 0; i < l; i++){
+            char in = tolower(input[i]);//turn every char to lower case
+            if((in >= 'a' && in <= 'z')){//if input at i is a letter
+                
+            }
+            else if((in >= '0') & (in <= '9')){//if char is a number
+                
+            }
+            else if((in  == '+') || (in == '-') || (in == '*') || (in == '/') || (in == ':') || (in == '=') || (in == '<') || (in == '>') || (in =='^') || (in == ';') || (in == ',') || (in == '(')
+                    || (in == ')') || (in == '[') || (in == ']') || (in == '{') || (in == '}')){//if char is special symbol
+                
+                
+            }
+            else if((in == ' ') || (in == '\n')){//if spaces detected
             
+                
+            }
+                
         }
     }
     TokenType nexttoken();//function to access next char in input file
