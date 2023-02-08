@@ -190,6 +190,15 @@ class Scanner {
         keyword["(*"] = TokenType::LCOMMENT;
         keyword["*)"] = TokenType::RCOMMENT;
     }
+    Scanner(string input){
+        Scanner();
+    }
+    void processdata(string input){
+        unsigned long l = input.length();
+        for (int i = 0; i < l; i++){
+            
+        }
+    }
     TokenType nexttoken();//function to access next char in input file
     
     private:
@@ -200,6 +209,7 @@ class Scanner {
 int main(int argc, const char * argv[]) {
     //feed text file
     ifstream textfile;
+    //change to your own input file
     textfile.open("/Users/kimberlymanzano/Desktop/CMPE-152Assignment#2/CMPE-152 Scanner Assignment#2/CMPE-152 Scanner Assignment#2/sampleinput.txt");
     if (textfile.is_open()){
         cout << "File is open!" << endl;
