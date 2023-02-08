@@ -9,25 +9,211 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <fstream>
+
+
 
 using namespace std;
-
-enum Token {
-    //and = "AND", ......, *) = "RCOMMENT"
-    //and so on until the end
+//Create an enumerated type to represent the token labels
+enum class TokenType {
+    AND,
+    ARRAY,
+    ASM,
+    BEGIN,
+    BREAK,
+    CASE,
+    CONST,
+    CONSTRUCTOR,
+    CONTINUE,
+    DESTRUCTOR,
+    DIV,
+    DO,
+    DOWNTO,
+    ELSE,
+    END,
+    FALSE,
+    FILE,
+    FOR,
+    FUNCTION,
+    GOTO,
+    IF,
+    IMPLEMENTATION,
+    IN,
+    INLINE,
+    INTERFACE,
+    LABEL,
+    MOD,
+    NIL,
+    NOT,
+    OBJECT,
+    OF,
+    ON,
+    OPERATOR,
+    OR,
+    PACKED,
+    PROCEDURE,
+    PROGRAM,
+    RECORD,
+    REPEAT,
+    SET,
+    SHL,
+    SHR,
+    STRING,
+    THEN,
+    TO,
+    TRUE,
+    TYPE,
+    UNIT,
+    UNTIL,
+    USES,
+    VAR,
+    WHILE,
+    WITH,
+    XOR,
+    INTEGER,
+    REAL,
+    INDENTIFIER,
+    PLUSOP,
+    MINUSOP,
+    MULTOP,
+    DIVOP,
+    ASSIGN,
+    EQUAL,
+    NE,
+    LTEQ,
+    GTEQ,
+    LT,
+    GT,
+    PLUSEQUAL,
+    MINUSEQUAL,
+    MULTEQUAL,
+    DIVEQUAL,
+    CARAT,
+    SEMICOLON,
+    COMMA,
+    LPAREN,
+    RPAREN,
+    LBRACKET,
+    RBRACKET,
+    LBRACE,
+    RBRACE,
+    LCOMMENT,
+    RCOMMENT,
+    //EOF
 };
 
 class Scanner {
     public:
-    string nexttoken();//function to access next char in input file
-    private:
+    Scanner() {
+        /* set up possible input word as key, and tokentype as value */
+        keyword["and"] = TokenType::AND;
+        keyword["array"] = TokenType::ARRAY;
+        keyword["asm"] = TokenType::ASM;
+        keyword["begin"] = TokenType::BEGIN;
+        keyword["break"] = TokenType::BREAK;
+        keyword["case"] = TokenType::CASE;
+        keyword["const"] = TokenType::CONST;
+        keyword["constructor"] = TokenType::CONSTRUCTOR;
+        keyword["continue"] = TokenType::CONTINUE;
+        keyword["destructor"] = TokenType::DESTRUCTOR;
+        keyword["div"] = TokenType::DIV;
+        keyword["do"] = TokenType::DO;
+        keyword["downto"] = TokenType::DOWNTO;
+        keyword["else"] = TokenType::ELSE;
+        keyword["end"] = TokenType::END;
+        keyword["FALSE"] = TokenType::FALSE;
+        keyword["file"] = TokenType::FILE;
+        keyword["for"] = TokenType::FOR;
+        keyword["function"] = TokenType::FUNCTION;
+        keyword["goto"] = TokenType::GOTO;
+        keyword["if"] = TokenType::IF;
+        keyword["implementation"] = TokenType::IMPLEMENTATION;
+        keyword["in"] = TokenType::IN;
+        keyword["inline"] = TokenType::INLINE;
+        keyword["interface"] = TokenType::INTERFACE;
+        keyword["label"] = TokenType::LABEL;
+        keyword["mod"] = TokenType::MOD;
+        keyword["nil"] = TokenType::NIL;
+        keyword["not"]= TokenType::NOT;
+        keyword["object"] = TokenType::OBJECT;
+        keyword["of"] = TokenType::OF;
+        keyword["on"] = TokenType::ON;
+        keyword["operator"] = TokenType::OPERATOR;
+        keyword["or"] = TokenType::OR;
+        keyword["packed"] = TokenType::PACKED;
+        keyword["procedure"] = TokenType::PROCEDURE;
+        keyword["program"] = TokenType::PROGRAM;
+        keyword["record"] = TokenType::RECORD;
+        keyword["repeat"] = TokenType::REPEAT;
+        keyword["set"] = TokenType::SET;
+        keyword["shl"] = TokenType::SHL;
+        keyword["SHR"] = TokenType::SHR;
+        keyword["string"] = TokenType::STRING;
+        keyword["then"] = TokenType::THEN;
+        keyword["to"] = TokenType::TO;
+        keyword["TRUE"] = TokenType::TRUE;
+        keyword["type"] = TokenType::TYPE;
+        keyword["unit"] = TokenType::UNIT;
+        keyword["until"] = TokenType::UNTIL;
+        keyword["uses"] = TokenType::USES;
+        keyword["var"] = TokenType::VAR;
+        keyword["while"] = TokenType::WHILE;
+        keyword["with"] = TokenType::WITH;
+        keyword["xor"] = TokenType::XOR;
+        keyword["(integer)"] = TokenType::INTEGER;
+        keyword["(real number)"] = TokenType::REAL;
+        keyword["(identifier)"] = TokenType::INDENTIFIER;
+        keyword["+"] = TokenType::PLUSOP;
+        keyword["-"] = TokenType::MINUSOP;
+        keyword["*"] = TokenType::MULTOP;
+        keyword["/"] = TokenType::DIVOP;
+        keyword[":="] = TokenType::ASSIGN;
+        keyword["="] = TokenType::EQUAL;
+        keyword["<>"] = TokenType::NE;
+        keyword["<="] = TokenType::LTEQ;
+        keyword[">="] = TokenType::GTEQ;
+        keyword["<"] = TokenType::LT;
+        keyword[">"] = TokenType::GT;
+        keyword["+="] = TokenType::PLUSEQUAL;
+        keyword["-=]"] = TokenType::MINUSEQUAL;
+        keyword["*="] = TokenType::MULTEQUAL;
+        keyword["/="] = TokenType::DIVEQUAL;
+        keyword["^"] = TokenType::CARAT;
+        keyword[";"] = TokenType::SEMICOLON;
+        keyword[","] = TokenType::COMMA;
+        keyword["("] = TokenType::LPAREN;
+        keyword[")"] = TokenType::RPAREN;
+        keyword["["] = TokenType::LBRACKET;
+        keyword["]"] = TokenType::RBRACKET;
+        keyword["{"] = TokenType::LBRACE;
+        keyword["}"] = TokenType::RBRACE;
+        keyword["(*"] = TokenType::LCOMMENT;
+        keyword["*)"] = TokenType::RCOMMENT;
+    }
+    TokenType nexttoken();//function to access next char in input file
     
-    vector<string> in_stream; //vector to store input stream
+    private:
+    map<string, TokenType> keyword;
+    vector<string> in_stream; //storing tokens after found from input stream
 };
 
 int main(int argc, const char * argv[]) {
     //feed text file
-    std::cout << "Hello, World!\n";
+    ifstream textfile;
+    textfile.open("/Users/kimberlymanzano/Desktop/CMPE-152Assignment#2/CMPE-152 Scanner Assignment#2/CMPE-152 Scanner Assignment#2/sampleinput.txt");
+    if (textfile.is_open()){
+        cout << "File is open!" << endl;
+        string inputtext ="";
+        string str="";
+        while(getline(textfile,str)){
+            inputtext+=str;
+            inputtext.push_back('\n');
+        }
+        cout << inputtext << endl;    }
+    else{
+        cout << "File never opened :(" << endl;
+    }
+    
     //if its a space, we keep going
     
     //if it is a A-Z or a-z, state = 2: word
