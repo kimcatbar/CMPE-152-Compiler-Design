@@ -195,31 +195,67 @@ class Scanner {
     }
     void processdata(string input){
         unsigned long l = input.length();
+        int currentState = 0;
+        string currentWord = "";
+        string currentNumber = "";
+        string currentSymbol = "";
         for (int i = 0; i < l; i++){
             char in = tolower(input[i]);//turn every char to lower case
-            if((in >= 'a' && in <= 'z')){//if input at i is a letter
-                
+            if((in >= 'a' && in <= 'z')){//if input at i is a letter state=1
+                if(currentState == 3) {//previos char was symbol
+                    in_stream.push_back(keyword[currentSymbol]);
+                    currentSymbol="";
+                }
+                currentWord.push_back(in);//add char to token variable
+                currentState = 1;//tells is what previous char is
             }
             else if((in >= '0') & (in <= '9')){//if char is a number
-                
+                if(currentState == 3){
+                    in_stream.push_back(keyword[currentSymbol]);
+                    currentSymbol = "";
+                }
+                if(currentWord == ""){
+                    currentNumber.push_back(in);
+                }
+                else{
+                    currentWord.push_back(in);
+                }
+                currentState = 2;
             }
             else if((in  == '+') || (in == '-') || (in == '*') || (in == '/') || (in == ':') || (in == '=') || (in == '<') || (in == '>') || (in =='^') || (in == ';') || (in == ',') || (in == '(')
                     || (in == ')') || (in == '[') || (in == ']') || (in == '{') || (in == '}')){//if char is special symbol
-                
+                if(currentWord != ""){
+                    if(keyword.count(currentWord) != 0) {
+                        in_stream.push_back(keyword[currentWord]);
+                    }
+                    else {
+                        in_stream.push_back(TokenType::INDENTIFIER);
+                    }
+                    currentWord = "";
+                }
+                else if(currentState == 2) {
+                    
+                    //code
+                }
+                currentState = 3;
                 
             }
             else if((in == ' ') || (in == '\n')){//if spaces detected
-            
-                
+                //code
+                currentState = 4;
+            }
+            else {
+                cout << "Unrecgonized state/token/symbol." << endl;
             }
                 
         }
+        cout << "EOF" << endl;
     }
     TokenType nexttoken();//function to access next char in input file
     
     private:
     map<string, TokenType> keyword;
-    vector<string> in_stream; //storing tokens after found from input stream
+    vector<TokenType> in_stream; //storing tokens after found from input stream
 };
 
 int main(int argc, const char * argv[]) {
