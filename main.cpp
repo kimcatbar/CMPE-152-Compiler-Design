@@ -99,7 +99,7 @@ enum class TokenType {
     RBRACE,
     LCOMMENT,
     RCOMMENT,
-    //EOF
+    //eof
 };
 
 class Scanner {
@@ -209,7 +209,7 @@ class Scanner {
                 currentWord.push_back(in);//add char to token variable
                 currentState = 1;//tells is what previous char is
             }
-            else if((in >= '0') & (in <= '9')){//if char is a number
+            else if(((in >= '0') && (in <= '9')) || (in == '.') ){//if char is a number
                 if(currentState == 3){
                     in_stream.push_back(keyword[currentSymbol]);
                     currentSymbol = "";
@@ -225,29 +225,67 @@ class Scanner {
             else if((in  == '+') || (in == '-') || (in == '*') || (in == '/') || (in == ':') || (in == '=') || (in == '<') || (in == '>') || (in =='^') || (in == ';') || (in == ',') || (in == '(')
                     || (in == ')') || (in == '[') || (in == ']') || (in == '{') || (in == '}')){//if char is special symbol
                 if(currentWord != ""){
-                    if(keyword.count(currentWord) != 0) {
-                        in_stream.push_back(keyword[currentWord]);
+                    if(keyword.count(currentWord) != 0) {//detect if the key exists in map
+                        in_stream.push_back(keyword[currentWord]);//if it exists, store it in vector
                     }
                     else {
-                        in_stream.push_back(TokenType::INDENTIFIER);
+                        in_stream.push_back(TokenType::INDENTIFIER);//not a reserved word, it is identifier
                     }
-                    currentWord = "";
+                    currentWord = "";//set to empty since we've come accross a symbol token
                 }
-                else if(currentState == 2) {
-                    
-                    //code
+                else if(currentState == 2) {//previous state is a number
+                    if(currentNumber.find('.') != std::string::npos){//if current number has a decimal point
+                        in_stream.push_back(TokenType::REAL);
+                    }
+                    else{
+                        in_stream.push_back(TokenType::INTEGER);
+                    }
+                    currentNumber = "";
                 }
                 currentState = 3;
                 
             }
-            else if((in == ' ') || (in == '\n')){//if spaces detected
-                //code
+            else if((in == ' ') || (in == '\n') || (in == '\t')){//if spaces detected
+                if(currentWord != ""){//if current word NOT empty & cover state 1
+                    in_stream.push_back(keyword[currentWord]);
+                    currentWord = "";//reset current word to be empty
+                }
+                else if(currentNumber != ""){//decide whether it is integer or real
+                    if(currentNumber.find('.') != std::string::npos){//if current number has a decimal point
+                        in_stream.push_back(TokenType::REAL);
+                    }
+                    else{
+                        in_stream.push_back(TokenType::INTEGER);
+                    }
+                    currentNumber = "";
+                }
+                else if(currentSymbol != ""){
+                    in_stream.push_back(keyword[currentSymbol]);
+                    currentSymbol = "";
+                }
                 currentState = 4;
             }
             else {
                 cout << "Unrecgonized state/token/symbol." << endl;
             }
                 
+        }
+        if(currentWord != ""){//if current word NOT empty & cover state 1
+            in_stream.push_back(keyword[currentWord]);
+            currentWord = "";//reset current word to be empty
+        }
+        else if(currentNumber != ""){//decide whether it is integer or real
+            if(currentNumber.find('.') != std::string::npos){//if current number has a decimal point
+                in_stream.push_back(TokenType::REAL);
+            }
+            else{
+                in_stream.push_back(TokenType::INTEGER);
+            }
+            currentNumber = "";
+        }
+        else if(currentSymbol != ""){
+            in_stream.push_back(keyword[currentSymbol]);
+            currentSymbol = "";
         }
         cout << "EOF" << endl;
     }
