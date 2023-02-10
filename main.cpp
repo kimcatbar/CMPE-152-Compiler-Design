@@ -122,7 +122,7 @@ class Scanner {
             char in = tolower(input[i]);//turn every char to lower case
             if((in >= 'a' && in <= 'z')){//if input at i is a letter state=1
                 if(currentState == 3) {//previos char was symbol
-                    in_stream.push_back(keyword[currentSymbol]);
+                    in_stream.push_back(keyword[currentSymbol] + ": " + currentSymbol);
                     currentSymbol="";
                 }
                 currentWord.push_back(in);//add char to token variable
@@ -130,7 +130,7 @@ class Scanner {
             }
             else if(((in >= '0') && (in <= '9')) || (in == '.') ){//if char is a number
                 if(currentState == 3){
-                    in_stream.push_back(keyword[currentSymbol]);
+                    in_stream.push_back(keyword[currentSymbol] + ": " + currentSymbol);
                     currentSymbol = "";
                 }
                 if(currentWord.empty()){
@@ -148,20 +148,20 @@ class Scanner {
                 }
                 else if(!currentWord.empty()){//if state 1
                     if(keyword.find(currentWord) != keyword.end()) {//detect if the key exists in map
-                        in_stream.push_back(keyword[currentWord]);//if it exists, store it in vector
+                        in_stream.push_back(keyword[currentWord] + ": " + currentWord);//if it exists, store it in vector
                     }
                     else {
-                        in_stream.push_back("INDENTIFIER");//not a reserved word, it is identifier
+                        in_stream.push_back("INDENTIFIER: " + currentWord);//not a reserved word, it is identifier
                     }
                     currentSymbol.push_back(in);
                     currentWord = "";//set to empty since we've come accross a symbol token
                 }
                 else if(currentState == 2) {//previous state is a number
                     if(currentNumber.find('.') != std::string::npos){//if current number has a decimal point
-                        in_stream.push_back("REAL");
+                        in_stream.push_back("REAL: " + currentNumber);
                     }
                     else{
-                        in_stream.push_back("INTEGER");
+                        in_stream.push_back("INTEGER: " + currentNumber);
                     }
                     currentSymbol.push_back(in);
                     currentNumber = "";
@@ -170,12 +170,12 @@ class Scanner {
                     string hypo = currentSymbol;
                     hypo.push_back(in);
                     if(keyword.count(hypo) == 0) {
-                        in_stream.push_back(keyword[currentSymbol]);
+                        in_stream.push_back(keyword[currentSymbol] + ": " + currentSymbol);
                         currentSymbol = "";
                         currentSymbol.push_back(in);
                     }
                     else {
-                        in_stream.push_back(keyword[hypo]);
+                        in_stream.push_back(keyword[hypo] + ": " + hypo);
                         currentSymbol = "";
                     }
                 }
@@ -187,20 +187,20 @@ class Scanner {
             }
             else if((in == ' ') || (in == '\n') || (in == '\t')){//if spaces detected
                 if(!currentWord.empty()){//if current word NOT empty & cover state 1
-                    in_stream.push_back(keyword[currentWord]);
+                    in_stream.push_back(keyword[currentWord] + ": " + currentWord);
                     currentWord = "";//reset current word to be empty
                 }
                 else if(!currentNumber.empty()){//decide whether it is integer or real
                     if(currentNumber.find('.') != std::string::npos){//if current number has a decimal point
-                        in_stream.push_back("REAL");
+                        in_stream.push_back("REAL: " + currentNumber);
                     }
                     else{
-                        in_stream.push_back("INTEGER");
+                        in_stream.push_back("INTEGER: " + currentNumber);
                     }
                     currentNumber = "";
                 }
                 else if(!currentSymbol.empty()){
-                    in_stream.push_back(keyword[currentSymbol]);
+                    in_stream.push_back(keyword[currentSymbol] + ": " + currentSymbol);
                     currentSymbol = "";
                 }
                 currentState = 4;
@@ -211,20 +211,20 @@ class Scanner {
                 
         }
         if(!currentWord.empty()){//if current word NOT empty & cover state 1
-            in_stream.push_back(keyword[currentWord]);
+            in_stream.push_back(keyword[currentWord] + ": " + currentWord);
             currentWord = "";//reset current word to be empty
         }
         else if(!currentNumber.empty()){//decide whether it is integer or real
             if(currentNumber.find('.') != std::string::npos){//if current number has a decimal point
-                in_stream.push_back("REAL");
+                in_stream.push_back("REAL: " + currentNumber);
             }
             else{
-                in_stream.push_back("INTEGER");
+                in_stream.push_back("INTEGER: " + currentNumber);
             }
             currentNumber = "";
         }
         else if(!currentSymbol.empty()){
-            in_stream.push_back(keyword[currentSymbol]);
+            in_stream.push_back(keyword[currentSymbol] + ": " + currentSymbol);
             currentSymbol = "";
         }
         //cout << "EOF" << endl;
@@ -233,7 +233,6 @@ class Scanner {
         if(in_stream.size() > tokenIndex) {
             string token = in_stream[tokenIndex];
             tokenIndex++;
-            token.insert(0, to_string(tokenIndex));
             return token;
         }
         return "EOF";
@@ -245,12 +244,18 @@ class Scanner {
 };
 
 int main(int argc, const char * argv[]) {
+    cout << argv[0] << endl;
     //feed text file
     ifstream textfile;
+    ofstream outfile;
     //change to your own input file
     textfile.open("/Users/kimberlymanzano/Desktop/CMPE-152Assignment#2/CMPE-152 Scanner Assignment#2/CMPE-152 Scanner Assignment#2/sampleinput1.txt");
+    outfile.open("test-out.txt");
+    if(outfile.is_open()){
+        cout << "OF does exist." << endl;
+    }
     if (textfile.is_open()){
-        cout << "File is open!" << endl;
+        //cout << "File is open!" << endl;
         string inputtext ="";
         string str="";
         while(getline(textfile,str)){
@@ -260,13 +265,15 @@ int main(int argc, const char * argv[]) {
         Scanner scanner = Scanner(inputtext);
         string token = scanner.nexttoken();
         while(token != "EOF") {
-            cout << token << endl;
+            outfile << token << endl;
             token = scanner.nexttoken();
         }
-        cout << inputtext << endl;    }
+         }
     else{
         cout << "File never opened :(" << endl;
     }
+    textfile.close();
+    outfile.close();
     
     //if its a space, we keep going
     
