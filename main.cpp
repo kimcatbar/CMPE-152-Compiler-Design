@@ -249,7 +249,7 @@ int main(int argc, const char * argv[]) {
     ifstream textfile;
     ofstream outfile;
     //change to your own input file
-    textfile.open("/Users/kimberlymanzano/Desktop/CMPE-152Assignment#2/CMPE-152 Scanner Assignment#2/CMPE-152 Scanner Assignment#2/sampleinput1.txt");
+    textfile.open("sampleinput1.txt");
     outfile.open("test-out.txt");
     if(outfile.is_open()){
         cout << "OF does exist." << endl;
