@@ -1,16 +1,79 @@
-PROGRAM Test;
-VAR
-   radius: REAL;
+program MergeArrays;
 
-FUNCTION CircleArea(r : REAL): REAL;
-BEGIN
-    CircleArea := 3.1415 * r * r;
-END;
+procedure Merge(var ar1,ar2,ar3: array of integer; var y,z:integer);
+var l,m,n: integer;
+    begin
+    l:=0;
+    m:=0;
+    n:=0;
+    while((l<y) and (m<z)) do 
+    begin
+        if(ar1[l] < ar2[m]) then 
+        begin
+            ar3[n]:=ar1[l];
+            l:=l+1;
+            n:=n+1;
+        end;
+        if(ar1[l] >= ar2[m]) then
+        begin
+            ar3[n]:=ar2[m];
+            m:=m+1;
+            n:=n+1;
+        end;
+        end;
+        while(l<y) do
+        begin
+            ar3[n]:=ar1[l];
+            l:=l+1;
+            n:=n+1;
+        end;
+        while(m<z) do
+        begin
+            ar3[n]:=ar2[m];
+            m:=m+1;
+            n:=n+1;
+        end;
+    end; 
+    
+procedure PrintArray(var a:array of integer; var z:integer);
+var x: integer; 
+    begin 
+    for x:=0 to z-2 do 
+    begin
+       
+    end;
+    writeln(); 
+    end;  
 
-BEGIN
-    READLN(radius);
-    WRITELN(CircleArea(radius));   
-    radius := 5.0;
-    radius := CircleArea(radius);
-    WRITELN(radius);              
-END.
+var 
+    a1: array[1..20] of integer; {1st array}
+    a2: array[1..20] of integer; {2nd array}
+    a3: array[1..40] of integer; {3rd array to combine 1st & 2nd} 
+    s1,s2,s3,i:integer; {s1 for a1, s2 for a2, s3 = si and s2, i = array index}
+  
+  {main() function to populate array}   
+    begin
+    i:=1;{index for a1}
+    read(a1[i]);{read data directly at index s1}
+    while not eoln do
+    begin 
+        i:=i+1;
+        read(a1[i]);
+    end;
+    s1:=i;
+    i:=1;
+  
+    read(a2[i]);
+    while not eoln do
+    begin
+        i:=i+1;
+        read(a2[i]);
+    end;
+    s2:=i;
+    PrintArray(a1,s1);
+    PrintArray(a2,s2);
+    s3:=s1+s2;
+    Merge(a1,a2,a3,s1,s2);
+    PrintArray(a3,s3);
+end.
+    
