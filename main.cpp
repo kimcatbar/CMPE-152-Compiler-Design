@@ -109,7 +109,7 @@ class Scanner {
         
     }
     Scanner(string input){
-        keyword = {{"and", "AND"}, {"array", "ARRAY"}, {"asm", "ASM"}, {"begin", "BEGIN"}, {"break", "BREAK"}, {"case", "CASE"}, {"const", "CONST"}, {"constructor", "CONSTRUCTOR"}, {"continue", "CONTINUE"}, {"destructor", "DESTRUCTOR"}, {"div", "DIV"}, {"do", "DO"}, {"downto", "DOWNTO"}, {"else", "ELSE"}, {"end", "END"}, {"FALSE", "FALSE"}, {"file", "FILE"}, {"for", "FOR"}, {"function", "FUNCTION"}, {"goto", "GOTO"}, {"if", "IF"}, {"implementation", "IMPLEMENTATION"}, {"in", "IN"}, {"inline", "INLINE"}, {"interface", "INTERFACE"}, {"label", "LABEL"}, {"mod", "MOD"}, {"nil", "NIL"}, {"not", "NOT"}, {"object", "OBJECT"}, {"of", "OF"}, {"on", "ON"}, {"operator", "OPERATOR"}, {"or", "OR"}, {"packed", "PACKED"}, {"procedure", "PROCEDURE"}, {"program", "PROGRAM"}, {"record", "RECORD"}, {"repeat", "REPEAT"}, {"set", "SET"}, {"shl", "SHL"}, {"SHR", "SHR"}, {"string", "STRING"}, {"then", "THEN"}, {"to", "TO"}, {"true", "TRUE"}, {"type", "TYPE"}, {"unit", "UNIT"}, {"until", "UNTIL"}, {"uses", "USES"}, {"var", "VAR"}, {"while", "WHILE"}, {"with", "WITH"}, {"xor", "XOR"}, {"(integer)", "INTEGER"}, {"(real number)", "REAL"}, {"(identifier)", "INDENTIFIER"}, {"+", "PLUSOP"}, {"-", "MINUSOP"}, {"*", "MULTOP"}, {"/", "DIVOP"}, {":=", "ASSIGN"}, {"=", "EQUAL"}, {"<>", "NE"}, {"<=", "LTEQ"}, {">=", "GTEQ"}, {"<", "LT"}, {">", "GT"}, {"+=", "PLUSEQUAL"}, {"-=]", "MINUSEQUAL"}, {"*=", "MULTEQUAL"}, {"/=", "DIVEQUAL"}, {"^", "CARAT"}, {"}, ", "SEMICOLON"}, {",", "COMMA"}, {"(", "LPAREN"}, {")", "RPAREN"}, {"[", "LBRACKET"}, {"]", "RBRACKET"}, {"{", "LBRACE"}, {"}", "RBRACE"}, {"(*", "LCOMMENT"}, {"*)", "RCOMMENT"}};
+        keyword = {{"and", "AND"}, {"array", "ARRAY"}, {"asm", "ASM"}, {"begin", "BEGIN"}, {"break", "BREAK"}, {"case", "CASE"}, {"const", "CONST"}, {"constructor", "CONSTRUCTOR"}, {"continue", "CONTINUE"}, {"destructor", "DESTRUCTOR"}, {"div", "DIV"}, {"do", "DO"}, {"downto", "DOWNTO"}, {"else", "ELSE"}, {"end", "END"}, {"false", "FALSE"}, {"file", "FILE"}, {"for", "FOR"}, {"function", "FUNCTION"}, {"goto", "GOTO"}, {"if", "IF"}, {"implementation", "IMPLEMENTATION"}, {"in", "IN"}, {"inline", "INLINE"}, {"interface", "INTERFACE"}, {"label", "LABEL"}, {"mod", "MOD"}, {"nil", "NIL"}, {"not", "NOT"}, {"object", "OBJECT"}, {"of", "OF"}, {"on", "ON"}, {"operator", "OPERATOR"}, {"or", "OR"}, {"packed", "PACKED"}, {"procedure", "PROCEDURE"}, {"program", "PROGRAM"}, {"record", "RECORD"}, {"repeat", "REPEAT"}, {"set", "SET"}, {"shl", "SHL"}, {"SHR", "SHR"}, {"string", "STRING"}, {"then", "THEN"}, {"to", "TO"}, {"true", "TRUE"}, {"type", "TYPE"}, {"unit", "UNIT"}, {"until", "UNTIL"}, {"uses", "USES"}, {"var", "VAR"}, {"while", "WHILE"}, {"with", "WITH"}, {"xor", "XOR"}, {"(integer)", "INTEGER"}, {"(real number)", "REAL"}, {"(identifier)", "INDENTIFIER"}, {"+", "PLUSOP"}, {"-", "MINUSOP"}, {"*", "MULTOP"}, {"/", "DIVOP"}, {":=", "ASSIGN"}, {"=", "EQUAL"}, {"<>", "NE"}, {"<=", "LTEQ"}, {">=", "GTEQ"}, {"<", "LT"}, {">", "GT"}, {"+=", "PLUSEQUAL"}, {"-=", "MINUSEQUAL"}, {"*=", "MULTEQUAL"}, {"/=", "DIVEQUAL"}, {"^", "CARAT"}, {";", "SEMICOLON"}, {",", "COMMA"}, {"(", "LPAREN"}, {")", "RPAREN"}, {"[", "LBRACKET"}, {"]", "RBRACKET"}, {"{", "LBRACE"}, {"}", "RBRACE"}, {"(*", "LCOMMENT"}, {"*)", "RCOMMENT"},{":","COLON"}};
         processdata(input);
     }
     void processdata(string input){
@@ -143,10 +143,10 @@ class Scanner {
             }
             else if((in  == '+') || (in == '-') || (in == '*') || (in == '/') || (in == ':') || (in == '=') || (in == '<') || (in == '>') || (in =='^') || (in == ';') || (in == ',') || (in == '(')
                     || (in == ')') || (in == '[') || (in == ']') || (in == '{') || (in == '}')){//if char is special symbol
-                if(currentState == 0) {
+                if(currentState == 0) {//if program is beginnining (state = 0)
                     currentSymbol.push_back(in);
                 }
-                else if(!currentWord.empty()){
+                else if(!currentWord.empty()){//if state 1
                     if(keyword.find(currentWord) != keyword.end()) {//detect if the key exists in map
                         in_stream.push_back(keyword[currentWord]);//if it exists, store it in vector
                     }
@@ -248,7 +248,7 @@ int main(int argc, const char * argv[]) {
     //feed text file
     ifstream textfile;
     //change to your own input file
-    textfile.open("/Users/kimberlymanzano/Desktop/CMPE-152Assignment#2/CMPE-152 Scanner Assignment#2/CMPE-152 Scanner Assignment#2/sampleinput.txt");
+    textfile.open("/Users/kimberlymanzano/Desktop/CMPE-152Assignment#2/CMPE-152 Scanner Assignment#2/CMPE-152 Scanner Assignment#2/sampleinput1.txt");
     if (textfile.is_open()){
         cout << "File is open!" << endl;
         string inputtext ="";
