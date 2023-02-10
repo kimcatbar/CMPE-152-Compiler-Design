@@ -133,7 +133,7 @@ class Scanner {
                     in_stream.push_back(keyword[currentSymbol]);
                     currentSymbol = "";
                 }
-                if(currentWord.find("") == string::npos){
+                if(currentWord.empty()){
                     currentNumber.push_back(in);
                 }
                 else{
@@ -146,7 +146,7 @@ class Scanner {
                 if(currentState == 0) {
                     currentSymbol.push_back(in);
                 }
-                else if(currentWord.find("") != string::npos){
+                else if(!currentWord.empty()){
                     if(keyword.find(currentWord) != keyword.end()) {//detect if the key exists in map
                         in_stream.push_back(keyword[currentWord]);//if it exists, store it in vector
                     }
@@ -186,11 +186,11 @@ class Scanner {
                 
             }
             else if((in == ' ') || (in == '\n') || (in == '\t')){//if spaces detected
-                if(currentWord.find("") != string::npos){//if current word NOT empty & cover state 1
+                if(!currentWord.empty()){//if current word NOT empty & cover state 1
                     in_stream.push_back(keyword[currentWord]);
                     currentWord = "";//reset current word to be empty
                 }
-                else if(currentNumber.find("") != string::npos){//decide whether it is integer or real
+                else if(!currentNumber.empty()){//decide whether it is integer or real
                     if(currentNumber.find('.') != std::string::npos){//if current number has a decimal point
                         in_stream.push_back("REAL");
                     }
@@ -199,7 +199,7 @@ class Scanner {
                     }
                     currentNumber = "";
                 }
-                else if(currentSymbol.find("") != string::npos){
+                else if(!currentSymbol.empty()){
                     in_stream.push_back(keyword[currentSymbol]);
                     currentSymbol = "";
                 }
@@ -210,11 +210,11 @@ class Scanner {
             }
                 
         }
-        if(currentWord.find("") != string::npos){//if current word NOT empty & cover state 1
+        if(!currentWord.empty()){//if current word NOT empty & cover state 1
             in_stream.push_back(keyword[currentWord]);
             currentWord = "";//reset current word to be empty
         }
-        else if(currentNumber.find("") != string::npos){//decide whether it is integer or real
+        else if(!currentNumber.empty()){//decide whether it is integer or real
             if(currentNumber.find('.') != std::string::npos){//if current number has a decimal point
                 in_stream.push_back("REAL");
             }
@@ -223,7 +223,7 @@ class Scanner {
             }
             currentNumber = "";
         }
-        else if(currentSymbol.find("") != string::npos){
+        else if(!currentSymbol.empty()){
             in_stream.push_back(keyword[currentSymbol]);
             currentSymbol = "";
         }
